@@ -1,0 +1,24 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - STORAGE_BACKEND=local          # change to "sheets" to use Google Sheets
+      - JWT_SECRET=change-me
+      - CORS_ORIGINS=http://localhost:8080
+      # For Google Sheets, uncomment and mount the service account file below:
+      # - GOOGLE_SPREADSHEET_ID=your_spreadsheet_id
+      # - GOOGLE_CREDENTIALS_FILE=/app/service_account.json
+      # For OpenAI:
+      # - OPENAI_API_KEY=sk-...
+    volumes:
+      - ./backend/data:/app/data
+      # - ./backend/service_account.json:/app/service_account.json:ro
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
